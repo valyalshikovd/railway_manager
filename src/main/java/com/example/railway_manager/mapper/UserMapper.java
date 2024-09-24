@@ -2,9 +2,11 @@ package com.example.railway_manager.mapper;
 
 import com.example.railway_manager.dto.UserDto;
 import com.example.railway_manager.model.security.Users;
+import jakarta.transaction.Transactional;
 
 import java.util.stream.Collectors;
 
+@Transactional
 public class UserMapper {
 
     public static UserDto toDto(Users user){

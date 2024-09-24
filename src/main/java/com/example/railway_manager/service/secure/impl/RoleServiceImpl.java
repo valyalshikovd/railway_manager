@@ -14,21 +14,6 @@ public class RoleServiceImpl implements RoleService {
 
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-
-        roleRepository
-                .save(
-                        Role
-                                .builder()
-                                .rolename("USER")
-                                .build()
-                );
-
-        roleRepository
-                .save(
-                        Role
-                                .builder()
-                                .rolename("ADMIN")
-                                .build()
-                );
+        System.out.println("RoleServiceImpl");
     }
 }

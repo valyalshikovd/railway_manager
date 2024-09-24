@@ -6,6 +6,7 @@ import com.example.railway_manager.model.security.UserPrincipal;
 import com.example.railway_manager.model.security.Users;
 import com.example.railway_manager.repository.UserRepository;
 import com.example.railway_manager.service.secure.MyUserDetailsService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserDetailsServiceImpl implements MyUserDetailsService {
 
 
@@ -27,6 +29,7 @@ public class UserDetailsServiceImpl implements MyUserDetailsService {
             System.out.println("User Not Found");
             throw new UsernameNotFoundException("user not found");
         }
+        System.out.println(user.getRoles());
 
         return new UserPrincipal(UserMapper.toDtoWithFetching(user));
     }
