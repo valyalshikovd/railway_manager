@@ -138,6 +138,7 @@ public class UserController{
     public ResponseEntity<String> deleteRoleFromUser(@RequestBody AddRoleDto addRoleDto){
         try {
             userService.deleteRole(addRoleDto.getRole(), addRoleDto.getUsername());
+            return ResponseEntity.ok().build();
         }catch (UserNotFound e){
             return ResponseEntity.unprocessableEntity().body("User not found " + e.getMessage());
         } catch (Exception e) {
