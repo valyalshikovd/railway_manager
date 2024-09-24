@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/railwaymanager"
+    username: "postgres"
+    password: "0000"
+
+  application:
+    name: "railway_manager"
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
