@@ -1,12 +1,11 @@
 package com.example.railway_manager.model.security;
 
-import com.example.railway_manager.dto.UserDto;
+import com.example.railway_manager.dto.security.UserDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public class UserPrincipal implements UserDetails {
 

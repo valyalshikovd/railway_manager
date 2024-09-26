@@ -17,6 +17,9 @@ public class CarriageType {
     @Column(name = "capacity")
     private Long capacity; //
 
+    @Column(name = "nameType")
+    private Long nameType; //
+
     @OneToMany(mappedBy = "carriageType",
             fetch = FetchType.LAZY)
     private Set<Carriage> carriages = new HashSet<>();

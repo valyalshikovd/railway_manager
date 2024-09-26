@@ -1,6 +1,6 @@
 package com.example.railway_manager.mapper;
 
-import com.example.railway_manager.dto.RoleDto;
+import com.example.railway_manager.dto.security.RoleDto;
 import com.example.railway_manager.model.security.Role;
 
 import java.util.stream.Collectors;

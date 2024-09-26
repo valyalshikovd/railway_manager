@@ -1,7 +1,5 @@
-package com.example.railway_manager.dto;
+package com.example.railway_manager.dto.security;
 
-import com.example.railway_manager.model.security.Role;
-import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 

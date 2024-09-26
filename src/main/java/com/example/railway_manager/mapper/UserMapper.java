@@ -1,6 +1,6 @@
 package com.example.railway_manager.mapper;
 
-import com.example.railway_manager.dto.UserDto;
+import com.example.railway_manager.dto.security.UserDto;
 import com.example.railway_manager.model.security.Users;
 import jakarta.transaction.Transactional;
 
@@ -13,7 +13,7 @@ public class UserMapper {
         return UserDto
                 .builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .password(null)
                 .build();
     }
 

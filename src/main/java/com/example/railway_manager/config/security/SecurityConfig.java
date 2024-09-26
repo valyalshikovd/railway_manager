@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -47,23 +48,25 @@ public class SecurityConfig {
                         {
                             request
 
-//                                    .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                                    .requestMatchers(HttpMethod.POST, ApiPaths.BASE_API + "/*").permitAll()
+                                    .requestMatchers(HttpMethod.POST, ApiPaths.USER_API + "/*").hasAnyAuthority("USER", "ADMIN")
+                                    .requestMatchers(HttpMethod.GET, ApiPaths.ADMIN_API + "/*").hasAuthority("ADMIN")
+                                    .requestMatchers(HttpMethod.POST, ApiPaths.ADMIN_API + "/*").hasAuthority("ADMIN");
 //                                    .requestMatchers(HttpMethod.POST, "/login").permitAll()
 //                                    .requestMatchers(HttpMethod.POST, "/registerAndLogin").permitAll()
-                                    .requestMatchers(ApiPaths.BASE_API_ADMIN_TEST).hasRole("ADMIN");
                             // .anyRequest().authenticated()
-                            endPointRouteService.getRoutes().forEach(route -> {
-                                if(route.getRoles() == null){
-                                    System.out.println(route.getRoute());
-                                    request.requestMatchers(route.getMethod(), route.getRoute()).permitAll();
-                                }else {
-                                    System.out.println(route.getRoute());
-                                    route.getRoles().forEach(role -> {
-                                        System.out.println(role);
-                                        request.requestMatchers(route.getMethod(), route.getRoute()).hasAuthority(role);
-                                    });
-                                }
-                            });
+//                            endPointRouteService.getRoutes().forEach(route -> {
+//                                if(route.getRoles() == null){
+//                                    System.out.println(route.getRoute());
+//                                    request.requestMatchers(route.getMethod(), route.getRoute()).permitAll();
+//                                }else {
+//                                    System.out.println(route.getRoute());
+//                                    route.getRoles().forEach(role -> {
+//                                        System.out.println(role);
+//                                        request.requestMatchers(route.getMethod(), route.getRoute()).hasAuthority(role);
+//                                    });
+//                                }
+//                            });
 
                         }
                 )

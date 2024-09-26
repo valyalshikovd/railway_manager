@@ -1,4 +1,4 @@
-package com.example.railway_manager.dto;
+package com.example.railway_manager.dto.security;
 
 import lombok.Builder;
 import lombok.Data;

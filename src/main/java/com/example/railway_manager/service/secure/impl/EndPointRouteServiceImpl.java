@@ -28,6 +28,13 @@ public class EndPointRouteServiceImpl implements EndPointRouteService {
         routes.add(new EndPointRoute("/changePassword", HttpMethod.POST, Arrays.asList(new String[]{"ADMIN", "USER"})));
         routes.add(new EndPointRoute("/getRoles", HttpMethod.POST,Arrays.asList(new String[]{"ADMIN"}) ));
         routes.add(new EndPointRoute("/addRoleToUser", HttpMethod.POST,Arrays.asList(new String[]{"ADMIN"}) ));
+        routes.add(new EndPointRoute("/deleteRoleFromUser", HttpMethod.POST,Arrays.asList(new String[]{"ADMIN"}) ));
+        routes.add(new EndPointRoute("/getAllUsers", HttpMethod.GET,Arrays.asList(new String[]{"ADMIN"}) ));
+        routes.add(new EndPointRoute("/getUser", HttpMethod.POST,Arrays.asList(new String[]{"ADMIN"}) ));
+        routes.add(new EndPointRoute("/addRole", HttpMethod.POST,Arrays.asList(new String[]{"ADMIN"}) ));
+        routes.add(new EndPointRoute("/updateRole", HttpMethod.POST,Arrays.asList(new String[]{"ADMIN"}) ));
+        routes.add(new EndPointRoute("/deleteRole", HttpMethod.POST,Arrays.asList(new String[]{"ADMIN"}) ));
+        routes.add(new EndPointRoute("/getUsersByRole", HttpMethod.POST,Arrays.asList(new String[]{"ADMIN"}) ));
     }
 
     public List<EndPointRoute> getRoutes() {

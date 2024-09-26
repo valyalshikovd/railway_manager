@@ -1,9 +1,10 @@
 package com.example.railway_manager.service.secure.impl;
 
-import com.example.railway_manager.dto.RoleDto;
-import com.example.railway_manager.dto.UserDto;
+import com.example.railway_manager.dto.security.RoleDto;
+import com.example.railway_manager.dto.security.UserDto;
 import com.example.railway_manager.exception.RoleDoesntExist;
 import com.example.railway_manager.exception.UserNotFound;
+import com.example.railway_manager.exception.WrongPasswordException;
 import com.example.railway_manager.mapper.RoleMapper;
 import com.example.railway_manager.mapper.UserMapper;
 import com.example.railway_manager.model.security.Role;
@@ -15,7 +16,6 @@ import com.example.railway_manager.service.secure.RoleService;
 import com.example.railway_manager.service.secure.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -170,13 +169,13 @@ public class UserServiceImpl implements UserService {
         if(userEntity == null){
             throw new UserNotFound(username);
         }
-        String encodedOldPassword = encoder.encode(oldPassword);
-        if(encodedOldPassword.equals(userEntity.getPassword())){
+        if(encoder.matches(oldPassword, userEntity.getPassword())){
             userEntity.setPassword(encoder.encode(newPassword));
+            userRepository.save(userEntity);
+            return UserDto.builder().username(username).password(newPassword).build();
         }
-        userRepository.save(userEntity);
 
-        return UserDto.builder().username(username).password(newPassword).build();
+        throw new WrongPasswordException(oldPassword);
     }
 
     @Override
@@ -235,6 +234,34 @@ public class UserServiceImpl implements UserService {
                                 get());
 
         userRepository.save(userEntity);
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        return userRepository
+                .findAll()
+                .stream()
+                .map(UserMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<UserDto> getAllUsers(int limit) {
+        return userRepository
+                .findAll()
+                .stream()
+                .map(UserMapper::toDto)
+                .limit(limit)
+                .toList();
+    }
+
+    @Override
+    public UserDto getUser(String username) {
+        Users user = userRepository.findByUsername(username);
+        if(user == null){
+            throw new UserNotFound(username);
+        }
+        return UserMapper.toDto(user);
     }
 
 

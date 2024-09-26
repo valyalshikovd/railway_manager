@@ -1,24 +1,24 @@
 package com.example.railway_manager.controller;
 
 
-import com.example.railway_manager.dto.AddRoleDto;
-import com.example.railway_manager.dto.ChangingPasswordDto;
-import com.example.railway_manager.dto.RoleDto;
-import com.example.railway_manager.dto.UserDto;
+import com.example.railway_manager.dto.security.AddRoleDto;
+import com.example.railway_manager.dto.security.ChangingPasswordDto;
+import com.example.railway_manager.dto.security.RoleDto;
+import com.example.railway_manager.dto.security.UserDto;
 import com.example.railway_manager.exception.RoleDoesntExist;
 import com.example.railway_manager.exception.UserNotFound;
+import com.example.railway_manager.exception.WrongPasswordException;
 import com.example.railway_manager.service.secure.UserService;
+import com.example.railway_manager.utils.ApiPaths;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,34 +26,39 @@ import java.util.List;
 @Controller
 @RestController
 @RequiredArgsConstructor
-
 public class UserController{
 
     private final UserService userService;
 
-    @PostMapping(("/register"))
-    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
+    @PostMapping((ApiPaths.BASE_API + "/register"))
+    public ResponseEntity<String> register(@RequestBody UserDto userDto) {
         try {
             log.info("Registering user: {}", userDto);
-            return ResponseEntity.ok(userService.registerUser(userDto));
+            userService.registerUser(userDto);
+            return ResponseEntity.ok("Successfully registered");
         }catch (Exception e) {
             log.error(e.getMessage() + userDto.toString());
             return ResponseEntity.unprocessableEntity().build();
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping(ApiPaths.BASE_API +"/login")
     public ResponseEntity<String> login(@RequestBody UserDto userDto) {
         try {
             log.info("Logining user: {}", userDto);
             return ResponseEntity.ok(userService.verify(userDto));
-        }catch (Exception e) {
+        }catch (BadCredentialsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Неверное имя пользователя или пароль");
+        }
+        catch (Exception e) {
             log.error(e.getMessage() + userDto.toString());
             return ResponseEntity.unprocessableEntity().build();
         }
     }
 
-    @PostMapping("/registerAndLogin")
+    @PostMapping(ApiPaths.BASE_API + "/registerAndLogin")
     public ResponseEntity<String> registerAndLogin(@RequestBody UserDto userDto){
         try {
             log.info("Registrating and logining user: {}", userDto);
@@ -64,7 +69,7 @@ public class UserController{
         }
     }
 
-    @PostMapping(("/registerWithRole"))
+    @PostMapping((ApiPaths.ADMIN_API + "/registerWithRole"))
     public ResponseEntity<String> registerWithRole(@RequestBody UserDto userDto) {
         try {
             userService.registerWithRole(userDto);
@@ -78,7 +83,7 @@ public class UserController{
         }
     }
 
-    @PostMapping("/deleteUser")
+    @PostMapping(ApiPaths.ADMIN_API + "/deleteUser")
     public ResponseEntity<String> deleteUser(@RequestBody UserDto userDto) {
         try {
             userService.deleteUser(userDto);
@@ -90,7 +95,7 @@ public class UserController{
         }
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping(ApiPaths.USER_API + "/changePassword")
     public ResponseEntity<String> updatePassword(@RequestBody ChangingPasswordDto changingPasswordDto, @AuthenticationPrincipal UserDetails userDetails) {
         try {
 
@@ -103,12 +108,14 @@ public class UserController{
 
         }catch (UserNotFound e){
             return ResponseEntity.unprocessableEntity().body("User not found " + e.getMessage());
+        }catch (WrongPasswordException e){
+            return ResponseEntity.unprocessableEntity().body("Wrong password " + e.getMessage());
         }catch (Exception e){
             return ResponseEntity.unprocessableEntity().body(e.getMessage());
         }
     }
 
-    @PostMapping("/getRoles")
+    @PostMapping(ApiPaths.ADMIN_API + "/getRoles")
     public ResponseEntity<List<RoleDto>> getRoles(@RequestBody UserDto userDto) {
         try {
             List<RoleDto> res = userService.getRoles(userDto.getUsername());
@@ -121,7 +128,7 @@ public class UserController{
     }
 
 
-    @PostMapping("/addRoleToUser")
+    @PostMapping(ApiPaths.ADMIN_API + "/addRoleToUser")
     public ResponseEntity<String> addRole(@RequestBody AddRoleDto addRoleDto){
         try {
             userService.addRole(addRoleDto.getRole(), addRoleDto.getUsername());
@@ -134,7 +141,7 @@ public class UserController{
 
     }
 
-    @PostMapping("/deleteRoleFromUser")
+    @PostMapping(ApiPaths.ADMIN_API + "/deleteRoleFromUser")
     public ResponseEntity<String> deleteRoleFromUser(@RequestBody AddRoleDto addRoleDto){
         try {
             userService.deleteRole(addRoleDto.getRole(), addRoleDto.getUsername());
@@ -142,6 +149,34 @@ public class UserController{
         }catch (UserNotFound e){
             return ResponseEntity.unprocessableEntity().body("User not found " + e.getMessage());
         } catch (Exception e) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+    }
+
+    @GetMapping(ApiPaths.ADMIN_API + "/getAllUsers")
+    public ResponseEntity<List<UserDto>> getAllUsers(@RequestParam(required = false) String limit) {
+        try {
+            if(limit != null){
+                int limitInt = Integer.parseInt(limit);
+                return ResponseEntity.ok(userService.getAllUsers(limitInt));
+            }
+            return ResponseEntity.ok(userService.getAllUsers());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+    @PostMapping(ApiPaths.ADMIN_API + "/getUser")
+    public ResponseEntity<UserDto> getUser(@RequestBody UserDto user){
+        try {
+            return ResponseEntity.ok(userService.getUser(user.getUsername()));
+        }catch (UserNotFound e){
+            return ResponseEntity.notFound().build();
+        }catch (Exception e) {
             return ResponseEntity.unprocessableEntity().build();
         }
     }
