@@ -171,7 +171,7 @@ public class UserController{
 
 
     @PostMapping(ApiPaths.ADMIN_API + "/getUser")
-    public ResponseEntity<UserDto> getUser(@RequestBody UserDto user){
+    public ResponseEntity<UserDto> getUser(@RequestBody UserDto user, @AuthenticationPrincipal UserDetails userDetails){
         try {
             return ResponseEntity.ok(userService.getUser(user.getUsername()));
         }catch (UserNotFound e){

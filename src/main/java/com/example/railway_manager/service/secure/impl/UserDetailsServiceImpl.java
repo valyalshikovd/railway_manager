@@ -4,7 +4,7 @@ package com.example.railway_manager.service.secure.impl;
 import com.example.railway_manager.mapper.UserMapper;
 import com.example.railway_manager.model.security.UserPrincipal;
 import com.example.railway_manager.model.security.Users;
-import com.example.railway_manager.repository.UserRepository;
+import com.example.railway_manager.repository.security.UserRepository;
 import com.example.railway_manager.service.secure.MyUserDetailsService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

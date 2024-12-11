@@ -1,12 +1,16 @@
 package com.example.railway_manager.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "carriage_types")
+@Getter
+@Setter
 public class CarriageType {
 
     @Id
@@ -17,8 +21,8 @@ public class CarriageType {
     @Column(name = "capacity")
     private Long capacity; //
 
-    @Column(name = "nameType")
-    private Long nameType; //
+    @Column(name = "nameType", unique = true)
+    private String nameType; //
 
     @OneToMany(mappedBy = "carriageType",
             fetch = FetchType.LAZY)

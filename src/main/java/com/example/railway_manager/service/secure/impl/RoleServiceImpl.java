@@ -6,7 +6,7 @@ import com.example.railway_manager.exception.RoleDoesntExist;
 import com.example.railway_manager.mapper.RoleMapper;
 import com.example.railway_manager.mapper.UserMapper;
 import com.example.railway_manager.model.security.Role;
-import com.example.railway_manager.repository.RoleRepository;
+import com.example.railway_manager.repository.security.RoleRepository;
 import com.example.railway_manager.service.secure.RoleService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

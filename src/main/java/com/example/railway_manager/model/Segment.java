@@ -3,12 +3,17 @@ package com.example.railway_manager.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "segments")
+@Getter
+@Setter
 public class Segment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +24,7 @@ public class Segment {
     @JoinColumn(
             name = "station1_id",
             referencedColumnName = "station_id")
-    public Station stationOne;
+    private Station stationOne;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -33,6 +38,7 @@ public class Segment {
     @Column(name = "level")
     private Integer level;
 
-    @ManyToMany(mappedBy = "segments")
-    private Set<Line> lines =  new HashSet<>();
+
+    @OneToMany(mappedBy = "segment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<EnrollmentLineSegment> enrollments;
 }

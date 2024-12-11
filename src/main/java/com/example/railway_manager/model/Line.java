@@ -4,7 +4,9 @@ package com.example.railway_manager.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,7 +19,7 @@ public class Line {
     @Column(name = "line_id")
     private Long id;
 
-    @Column(name = "name_line")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Column(
@@ -26,22 +28,13 @@ public class Line {
     )
     private Double summary_weight;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "line_segment",
-            joinColumns = @JoinColumn(name = "line_id"),
-            inverseJoinColumns = @JoinColumn(name = "segment_id")
-    )
-    private Set<Segment> segments = new HashSet<Segment>();
+    @OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
+    @OrderColumn(name = "enrollmentLineSegment_order")
+    private List<EnrollmentLineSegment> enrollmentLineSegments;
 
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "line_stantion",
-            joinColumns = @JoinColumn(name = "line_id"),
-            inverseJoinColumns = @JoinColumn(name = "station_id")
-    )
-    private Set<Station> stations = new HashSet<Station>();
+    @OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
+    @OrderColumn(name = "enrolmentLineStation_order")
+    private List<EnrolmentLineStations> enrollmentLineStations;
 
     @OneToOne(mappedBy = "line", optional  = true)
     private Travel travel;

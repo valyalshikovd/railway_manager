@@ -27,6 +27,6 @@ public class Station {
     @OneToMany(mappedBy = "stationTwo")
     private Set<Segment> segmentsTwo = new HashSet<>();
 
-    @ManyToMany(mappedBy = "stations")
-    private Set<Line> lines =  new HashSet<>();
+    @OneToMany(mappedBy = "station", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<EnrolmentLineStations> enrollments;
 }

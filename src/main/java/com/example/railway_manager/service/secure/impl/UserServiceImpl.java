@@ -9,8 +9,8 @@ import com.example.railway_manager.mapper.RoleMapper;
 import com.example.railway_manager.mapper.UserMapper;
 import com.example.railway_manager.model.security.Role;
 import com.example.railway_manager.model.security.Users;
-import com.example.railway_manager.repository.RoleRepository;
-import com.example.railway_manager.repository.UserRepository;
+import com.example.railway_manager.repository.security.RoleRepository;
+import com.example.railway_manager.repository.security.UserRepository;
 import com.example.railway_manager.service.secure.JWTService;
 import com.example.railway_manager.service.secure.RoleService;
 import com.example.railway_manager.service.secure.UserService;
@@ -57,18 +57,18 @@ public class UserServiceImpl implements UserService {
         System.out.println(user);
         System.out.println(admin);
 
-        roleRepository.save(user);
-        roleRepository.save(admin);
-
-
-       userRepository
-                .save(
-                        Users.builder()
-                                .username("DefaultAdmin")
-                                .password(encoder.encode("0000"))
-                                .roles(new HashSet<>(Arrays.asList(user, admin)))
-                                .build()
-                );
+//        roleRepository.save(user);
+//        roleRepository.save(admin);
+//
+//
+//       userRepository
+//                .save(
+//                        Users.builder()
+//                                .username("DefaultAdmin")
+//                                .password(encoder.encode("0000"))
+//                                .roles(new HashSet<>(Arrays.asList(user, admin)))
+//                                .build()
+//                );
 
     }
 

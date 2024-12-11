@@ -12,5 +12,5 @@ import java.util.Set;
 public class RoleDto {
     private Long id;
     private String name;
-    private Set<UserDto> users = new HashSet<UserDto>();
+    private Set<UserDto> users;
 }

@@ -3,13 +3,15 @@ package com.example.railway_manager.model;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 @Table(name = "locomotives")
-@Data
+@Setter
+@Getter
 public class Locomotive {
 
     @Id
@@ -21,7 +23,7 @@ public class Locomotive {
     private Long locomotive_state;
 
     @Column(name = "date_of_purchase")
-    private Date dateOfPurchase;
+    private LocalDate dateOfPurchase;
 
     @Column(name = "count_of_engine_hours")
     private Long countOfEngineHours;
